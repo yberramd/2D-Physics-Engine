@@ -2,6 +2,8 @@
 
 ## Steps
 
+### 0 - Learning how SFML works
+
 ### 1- Collision detection
 
 ### 2 - 
