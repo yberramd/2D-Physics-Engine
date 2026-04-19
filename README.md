@@ -1,8 +1,10 @@
 # 2D Physcis Engine
 
-## Goal
+## Steps
 
+### 1- Collision detection
 
+### 2 - 
 
 ## Libraries
 
