@@ -1,13 +1,36 @@
 #include <SFML/Graphics.hpp>
 
+//Math Collision Invisible construct 
+
+struct AABB
+{
+	sf::Vector2f min;
+	sf::Vector2f max;
+};
+
 int main()
 {
 	//Window
 	sf::RenderWindow window( sf::VideoMode( { 640, 480 } ), "SFML works!");
-	sf::RectangleShape shape( {120.f, 100.f} );
-	shape.setFillColor( sf::Color::Green );
-	shape.setPosition({60.f, 50.f});
 
+	//Shape
+	sf::VertexArray rectangle(sf::PrimitiveType::TriangleStrip, 4);
+	//Define the position of the rectangle point
+	rectangle[0].position = sf::Vector2f(10.f, 10.f);
+	rectangle[1].position = sf::Vector2f(500.f, 10.f);
+	rectangle[2].position = sf::Vector2f(10.f, 200.f);
+	rectangle[3].position = sf::Vector2f(500.f, 200.f);
+
+	// Define the color of the triangle's points
+	rectangle[0].color = sf::Color::Red;
+	rectangle[1].color = sf::Color::Blue;
+	rectangle[2].color = sf::Color::Magenta;
+	rectangle[3].color = sf::Color::Green;
+
+	// Transform (Used to move the visual of the Shape)
+	sf::Transform transform;
+
+	transform.translate({0.f, 0.f});
 
 	//Game loop
 	while ( window.isOpen() )
@@ -25,12 +48,13 @@ int main()
 			}
 		}
 		//Update
-		shape.move({0.01f, 0.01f});
+		transform.translate({0.f, 0.01f});
 
 		//Render
 		window.clear(); // Clear old Frame
 
-		window.draw( shape );// Draw the game
+		// Draw the game
+		window.draw(rectangle, transform);
 		
 		window.display(); // Tell app that window is done drawing
 	}
