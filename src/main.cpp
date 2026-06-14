@@ -1,13 +1,30 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+//constante universel
+
+const float UNIVERSAL_GRAVITY = 6.6743e-11;
+
+const float EARTH_GRAVITY = 9.81;
+
 //Math Collision Invisible construct 
 
-struct AABB
+struct AABB //Construct for a rectangle
 {
 	sf::Vector2f min;
 	sf::Vector2f max;
 };
+
+//Information about the object
+
+struct OBJECT
+{
+	AABB pos;
+	int element;
+	int area;
+	int weight;
+};
+
 
 int	ft_sat(AABB box1, AABB box2)
 {
@@ -34,13 +51,19 @@ int main()
 	rectangle[3].color = sf::Color::Green;
 
 	// Transform (Used to move the visual of the Shape)
-	sf::Transform box1, box2;
-	const float* matrix_b1 = box1.getMatrix();
-	const float* matrix_b2 = box2.getMatrix();
-	AABB pos_b1, pos_b2;
+	sf::Transform pos_box1, pos_box2;
+	const float* matrix_b1 = pos_box1.getMatrix();
+	const float* matrix_b2 = pos_box2.getMatrix();
+	OBJECT box1, box2;
 	
-	box1.translate({0.f, 0.f});
-	box2.translate({600.f, 0.f});
+	// Initialise info about box1 to test Gravity
+	box1.weight = 45;
+
+	// Initialise info about box2 to test Gravity
+	box2.weight = 60;
+
+	pos_box1.translate({0.f, 0.f});
+	pos_box2.translate({600.f, 0.f});
 
 	//Game loop
 	while ( window.isOpen() )
@@ -60,26 +83,27 @@ int main()
 		/*Inner Update*/
 
 		//Box 1
-		pos_b1.min = {matrix_b1[12], matrix_b1[13] + 40};
-		pos_b1.max = {matrix_b1[12] + 40, matrix_b1[13]};
+		box1.pos.min = {matrix_b1[12], matrix_b1[13] + 40};
+		box1.pos.max = {matrix_b1[12] + 40, matrix_b1[13]};
 		
-		if (pos_b1.min.y < 480 && pos_b1.max.x < 640) {
-			box1.translate({0.01f, 0.01f});
+		if (box1.pos.min.y < 480 && box1.pos.max.x < 640) {
+			pos_box1.translate({0.01f, 0.01f});
 		}
-		//Box 2
-		pos_b2.min = {matrix_b2[12], matrix_b2[13] + 40};
-		pos_b2.max = {matrix_b2[12] + 40, matrix_b2[13]};
 
-		if (pos_b2.min.y < 480 && pos_b2.max.x > 0) {
-			box2.translate({-0.01f, 0.01f});
+		//Box 2
+		box2.pos.min = {matrix_b2[12], matrix_b2[13] + 40};
+		box2.pos.max = {matrix_b2[12] + 40, matrix_b2[13]};
+
+		if (box2.pos.min.y < 480 && box2.pos.max.x > 0) {
+			pos_box2.translate({-0.01f, 0.01f});
 		}
 
 		/*Render*/
 		window.clear(); // Clear old Frame
 
 		// Draw the game
-		window.draw(rectangle, box1);
-		window.draw(rectangle, box2);
+		window.draw(rectangle, pos_box1);
+		window.draw(rectangle, pos_box2);
 		
 		window.display(); // Tell app that window is done drawing
 	}
