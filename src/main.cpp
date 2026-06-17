@@ -20,21 +20,27 @@ struct AABB //Construct for a rectangle
 struct OBJECT
 {
 	AABB pos;
-	int element;
-	int area;
-	int weight;
+	sf::Vector2f acceleration;
+	sf::Vector2f speed;
+	float mass;
 };
 
 
 int	ft_sat(AABB box1, AABB box2)
 {
-	return 0;
+	//std::cout << "Pos Box1 min y :" << box1.min.y << "\n";
+	//std::cout << "Pos Box2 min y :" << box2.min.y << "\n";
+	//if((box1.min.y > box2.max.y) || (box2.min.y > box1.max.y)) return false;
+	if((box1.max.x < box2.min.x) || (box1.min.x > box2.max.x)) return false; 
+
+	std::cout << "TEST\n";
+	return true;
 }
 
 int main()
 {
 	//Window
-	sf::RenderWindow window( sf::VideoMode( { 640, 480 } ), "SFML works!");
+	sf::RenderWindow window( sf::VideoMode( { 640, 680 } ), "SFML works!");
 
 	//Shape
 	sf::VertexArray rectangle(sf::PrimitiveType::TriangleStrip, 4);
@@ -57,13 +63,17 @@ int main()
 	OBJECT box1, box2;
 	
 	// Initialise info about box1 to test Gravity
-	box1.weight = 45;
+	box1.mass = 45;
 
 	// Initialise info about box2 to test Gravity
-	box2.weight = 60;
+	box2.mass = 60;
 
 	pos_box1.translate({0.f, 0.f});
 	pos_box2.translate({600.f, 0.f});
+
+	//Time
+	sf::Clock clock;
+	sf::Time elapsed;
 
 	//Game loop
 	while ( window.isOpen() )
@@ -86,7 +96,7 @@ int main()
 		box1.pos.min = {matrix_b1[12], matrix_b1[13] + 40};
 		box1.pos.max = {matrix_b1[12] + 40, matrix_b1[13]};
 		
-		if (box1.pos.min.y < 480 && box1.pos.max.x < 640) {
+		if ((box1.pos.min.y < 580 && box1.pos.max.x < 640) && !ft_sat(box1.pos, box2.pos)) {
 			pos_box1.translate({0.01f, 0.01f});
 		}
 
@@ -94,20 +104,20 @@ int main()
 		box2.pos.min = {matrix_b2[12], matrix_b2[13] + 40};
 		box2.pos.max = {matrix_b2[12] + 40, matrix_b2[13]};
 
-		if (box2.pos.min.y < 480 && box2.pos.max.x > 0) {
+		if (box2.pos.min.y < 580 && box2.pos.max.x > 0) {
 			pos_box2.translate({-0.01f, 0.01f});
 		}
 
-		/*Render*/
 		window.clear(); // Clear old Frame
-
+		
 		// Draw the game
 		window.draw(rectangle, pos_box1);
 		window.draw(rectangle, pos_box2);
 		
 		window.display(); // Tell app that window is done drawing
 	}
-
 	//End of application
 	return 0;
 }
+
+/*Render*/
